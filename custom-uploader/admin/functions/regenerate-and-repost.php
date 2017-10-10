@@ -13,7 +13,7 @@
  * @subpackage Custom_Uploader/admin
  */
 
-require_once($_SERVER['DOCUMENT_ROOT'] . '/../custom_uploader/class-custom-uploader-uploader.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/../custom-uploader/class-custom-uploader-uploader.php');
 
 $_blog_id = empty($_GET['blog_id']) ? null : (int)$_GET['blog_id'];
 
