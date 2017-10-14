@@ -30,15 +30,17 @@ if($_blog_id !== null) {
 			$short_url = $image_uploader->create_short_url($attach_id);
 			$facebook_id = $image_uploader->post_to_facebook($attach_id);
 			$tumblr_id = $image_uploader->post_to_tumblr($attach_id);
+			$instagram_code = $image_uploader->post_to_instagram($attach_id);
 			
-			
-			if(strlen($short_url) == 0 or $facebook_id == 0 or $tumblr_id == 0) {
+			if(strlen($short_url) == 0 or $facebook_id == 0 or $tumblr_id == 0 or strlen($instagram_code) == 0) {
 				if(strlen($short_url) == 0)
 					echo 'Error regenerating short url!';
 				if($facebook_id == 0)
 					echo 'Error posting to Facebook!';
 				if($tumblr_id == 0)
 					echo 'Error posting to Tumblr!';
+				if(strlen($instagram_code) == 0)
+					echo 'Error posting to Instagram!';
 				die();
 			}
 			
