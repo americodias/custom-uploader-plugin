@@ -65,6 +65,15 @@ class Custom_Uploader_Attachment_Fields {
 	 * @var      bool    $tumblr_is_enabled    Currect state of Tumblr.
 	 */
 	private $tumblr_is_enabled;
+
+	/**
+	 * Flag indicating if Instagram upload is active.
+	 *
+	 * @since    1.1.0
+	 * @access   private
+	 * @var      bool    $instagram_is_enabled    Currect state of Instagram.
+	 */
+	private $instagram_is_enabled;
 	
 	/**
 	 * Constructor
@@ -83,6 +92,7 @@ class Custom_Uploader_Attachment_Fields {
         $this->google_url_shortener_is_enabled = $cup_options['cup_google_url_shortener_is_enabled'];
         $this->facebook_is_enabled = $cup_options['cup_facebook_is_enabled'];
 		$this->tumblr_is_enabled = $cup_options['cup_tumblr_is_enabled'];
+		$this->instagram_is_enabled = $cup_options['cup_instagram_is_enabled'];
 		
 		add_filter( 'attachment_fields_to_edit', array( $this, 'add_fields_to_edit'), 10, 2 );
 		add_action( 'edit_attachment', array( $this, 'edit_fields' ) );
@@ -103,13 +113,14 @@ class Custom_Uploader_Attachment_Fields {
 
 		$repost_facebook_url = plugins_url( '/functions/send-to-facebook.php' . $query_string, __FILE__ );
 		$repost_tumblr_url = plugins_url( '/functions/send-to-tumblr.php' . $query_string, __FILE__ );
+		$repost_instagram_url = plugins_url( '/functions/send-to-instagram.php' . $query_string, __FILE__ );
 		$regenerate_google_short_url = plugins_url( '/functions/regenerate-google-short-url.php' . $query_string, __FILE__ );
 		$regenerate_and_repost = plugins_url( '/functions/regenerate-and-repost.php' . $query_string, __FILE__ );
 		
 	    $field_value = get_post_meta( $post->ID, 'cup_date_taken', true );
 	    $form_fields['cup_date_taken'] = array(
 	        'value' => $field_value ? $field_value : '',
-	        'label' => __( 'Date taken' ),
+	        'label' => __( 'Date Taken' ),
 	        'helps' => __( 'Set a capture date for this attachment' )
 	    );
 		
@@ -117,8 +128,8 @@ class Custom_Uploader_Attachment_Fields {
 		    $field_value = get_post_meta( $post->ID, 'cup_google_short_url_id', true );
 		    $form_fields['cup_google_short_url_id'] = array(
 		        'value' => $field_value ? $field_value : '',
-		        'label' => __( 'Google url shortener ID' ),
-		        'helps' => __( 'Google url shortener ID number' ) . ' (<a href="' . $regenerate_google_short_url .'">' . __( 'Regenerate' ) . '</a>)'
+		        'label' => __( 'Google Url Shortener ID' ),
+		        'helps' => __( 'Google Url Shortener ID Number' ) . ' (<a href="' . $regenerate_google_short_url .'">' . __( 'Regenerate' ) . '</a>)'
 		    );
 		}
 		if($this->facebook_is_enabled) {
@@ -126,7 +137,7 @@ class Custom_Uploader_Attachment_Fields {
 		    $form_fields['cup_facebook_id'] = array(
 		        'value' => $field_value ? $field_value : '',
 		        'label' => __( 'Facebook ID' ),
-		        'helps' => __( 'Facebook ID number' ) . ' (<a href="' . $repost_facebook_url .'">' . __( 'Repost' ) . '</a>)'
+		        'helps' => __( 'Facebook ID Number' ) . ' (<a href="' . $repost_facebook_url .'">' . __( 'Repost' ) . '</a>)'
 		    );
 		}
 		if($this->tumblr_is_enabled) {
@@ -134,7 +145,15 @@ class Custom_Uploader_Attachment_Fields {
 		    $form_fields['cup_tumblr_id'] = array(
 		        'value' => $field_value ? $field_value : '',
 		        'label' => __( 'Tumblr ID' ),
-		        'helps' => __( 'Tumblr ID number' ) . ' (<a href="' . $repost_tumblr_url .'">' . __( 'Repost' ) . '</a>)'
+		        'helps' => __( 'Tumblr ID Number' ) . ' (<a href="' . $repost_tumblr_url .'">' . __( 'Repost' ) . '</a>)'
+		    );
+		}
+		if($this->instagram_is_enabled) {
+		    $field_value = get_post_meta( $post->ID, 'cup_instagram_code', true );
+		    $form_fields['cup_instagram_code'] = array(
+		        'value' => $field_value ? $field_value : '',
+		        'label' => __( 'Instagram Code' ),
+		        'helps' => __( 'Instagram Code Number' ) . ' (<a href="' . $repost_instagram_url .'">' . __( 'Repost' ) . '</a>)'
 		    );
 		}
 		$form_fields['cup_regenerate_and_repost'] = array(  

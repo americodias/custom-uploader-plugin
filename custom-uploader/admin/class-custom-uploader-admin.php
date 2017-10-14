@@ -162,8 +162,9 @@ class Custom_Uploader_Admin {
             <h2 class="nav-tab-wrapper">  
                 <a href="?page=custom-uploader&tab=tab_one" class="nav-tab <?php echo $this->active_tab == 'tab_one' ? 'nav-tab-active' : ''; ?>">Google URL Shortener</a>  
                 <a href="?page=custom-uploader&tab=tab_two" class="nav-tab <?php echo $this->active_tab == 'tab_two' ? 'nav-tab-active' : ''; ?>">Facebook</a>  
-				<a href="?page=custom-uploader&tab=tab_three" class="nav-tab <?php echo $this->active_tab == 'tab_three' ? 'nav-tab-active' : ''; ?>">Tumblr</a>  
-				<a href="?page=custom-uploader&tab=tab_four" class="nav-tab <?php echo $this->active_tab == 'tab_four' ? 'nav-tab-active' : ''; ?>">Galleries</a>  
+				<a href="?page=custom-uploader&tab=tab_three" class="nav-tab <?php echo $this->active_tab == 'tab_three' ? 'nav-tab-active' : ''; ?>">Tumblr</a>
+				<a href="?page=custom-uploader&tab=tab_four" class="nav-tab <?php echo $this->active_tab == 'tab_four' ? 'nav-tab-active' : ''; ?>">Instagram</a>    
+				<a href="?page=custom-uploader&tab=tab_five" class="nav-tab <?php echo $this->active_tab == 'tab_five' ? 'nav-tab-active' : ''; ?>">Galleries</a>  
             </h2>
 			
             <form method="post" action="options.php"> 
@@ -190,6 +191,11 @@ class Custom_Uploader_Admin {
 						settings_fields( 'custom-uploader' );
 						do_settings_sections( 'custom-uploader-4' );
 
+	                } elseif( strcmp($this->active_tab, 'tab_five') == 0 )  {
+
+						settings_fields( 'custom-uploader' );
+						do_settings_sections( 'custom-uploader-5' );
+
 	                }
 				
 					submit_button();
@@ -208,14 +214,14 @@ class Custom_Uploader_Admin {
 	 */
 	public function page_init() {
 
-		/* Gooogle URL Shortner Section
-		*******************************/
 		register_setting(
 			'custom-uploader', // option_group
 			'cup_options', // cup_options
 			array( $this, 'sanitize' ) // sanitize_callback
 		);
 		
+		/* Gooogle URL Shortner Section
+		*******************************/
 		add_settings_section(
 			'google_url_shortener', // id
 			'', // title
@@ -243,13 +249,7 @@ class Custom_Uploader_Admin {
 		);
 
 		/* Facebook Section
-		*******************/
-		register_setting(
-			'custom-uploader', // option_group
-			'cup_options', // cup_options
-			array( $this, 'sanitize' ) // sanitize_callback
-		);
-		
+		*******************/	
 		add_settings_section(
 			'facebook', // id
 			'', // title
@@ -299,12 +299,6 @@ class Custom_Uploader_Admin {
 
 		/* Tumblr Section
 		*****************/
-		register_setting(
-			'custom-uploader', // option_group
-			'cup_options', // cup_options
-			array( $this, 'sanitize' ) // sanitize_callback
-		);
-		
 		add_settings_section(
 			'tumblr', // id
 			'', // title
@@ -369,26 +363,53 @@ class Custom_Uploader_Admin {
 		);
 		*/
 
-		/* Mobile Gallery Section
+		/* Instagram Section
 		*************************/
-		register_setting(
-			'custom-uploader', // option_group
-			'cup_options', // cup_options
-			array( $this, 'sanitize' ) // sanitize_callback
+		add_settings_section(
+			'instagram', // id
+			'', // title
+			array( $this, 'instagram_section_info' ), // callback
+			'custom-uploader-4' // page
 		);
 		
+		add_settings_field(
+			'instagram_is_enabled', // id
+			'Enable', // title
+			array( $this, 'instagram_is_enabled_callback' ), // callback
+			'custom-uploader-4', // page
+			'instagram' // section
+		);
+			
+		add_settings_field(
+			'instagram_username', // id
+			'Username', // title
+			array( $this, 'instagram_username_callback' ), // callback
+			'custom-uploader-4', // page
+			'instagram' // section
+		);
+
+		add_settings_field(
+			'instagram_password', // id
+			'Password', // title
+			array( $this, 'instagram_password_callback' ), // callback
+			'custom-uploader-4', // page
+			'instagram' // section
+		);
+			
+		/* Mobile Gallery Section
+		*************************/		
 		add_settings_section(
 			'galleries', // id
 			'', // title
 			array( $this, 'galleries_section_info' ), // callback
-			'custom-uploader-4' // page
+			'custom-uploader-5' // page
 		);
 		
 		add_settings_field(
 			'mobile_gallery_id', // id
 			'Mobile Gallery ID', // title
 			array( $this, 'mobile_gallery_id_callback' ), // callback
-			'custom-uploader-4', // page
+			'custom-uploader-5', // page
 			'galleries' // section
 		);
 
@@ -396,7 +417,7 @@ class Custom_Uploader_Admin {
 			'dslr_gallery_id', // id
 			'dSLR Gallery ID', // title
 			array( $this, 'dslr_gallery_id_callback' ), // callback
-			'custom-uploader-4', // page
+			'custom-uploader-5', // page
 			'galleries' // section
 		);
 
@@ -498,6 +519,18 @@ class Custom_Uploader_Admin {
 				$sanitary_values['cup_tumblr_blog_name'] = sanitize_text_field( $input['cup_tumblr_blog_name'] );
 		}
 		elseif($_POST['tab'] === 'tab_four') {
+			if ( array_key_exists( 'cup_instagram_is_enabled', $input ) )
+				$sanitary_values['cup_instagram_is_enabled'] = true;
+			else
+				$sanitary_values['cup_instagram_is_enabled'] = false;
+		
+			if ( isset( $input['cup_instagram_username'] ) )
+				$sanitary_values['cup_instagram_username'] = sanitize_text_field( $input['cup_instagram_username'] );
+			
+			if ( isset( $input['cup_instagram_password'] ) )
+				$sanitary_values['cup_instagram_password'] = sanitize_text_field( $input['cup_instagram_password'] );
+		}
+		elseif($_POST['tab'] === 'tab_five') {
 			if ( isset( $input['cup_mobile_gallery_id'] ) )
 				$sanitary_values['cup_mobile_gallery_id'] = sanitize_text_field( $input['cup_mobile_gallery_id'] );
 		
@@ -542,6 +575,16 @@ class Custom_Uploader_Admin {
 		$tumblr_callback_url = plugins_url( 'functions/tumblr-callback.php', __FILE__ ) . '?blog_id=' . get_current_blog_id();
 		echo '<p>Insert the Comsumer Key/Secret and then use this <a href="' . $tumblr_autenticate_url . '">activation link</a> to get OAuth Token/Secret.</p>';
 		echo '<p>Please define your call back url as follows: <strong>' . $tumblr_callback_url . '</strong></p>';
+	}
+	
+	/**
+	 * Instagram info
+	 *
+	 * @since 1.1.0
+	 * @return void
+	 * @author Américo Dias <americo.dias@gmail.com>
+	 */
+	public function instagram_section_info() {
 	}
 	
 	/**
@@ -761,6 +804,48 @@ class Custom_Uploader_Admin {
 		printf(
 			'<input class="regular-text" type="text" name="cup_options[cup_tumblr_oauth_secret]" id="cup_tumblr_oauth_secret" value="%s">',
 			isset( $this->options['cup_tumblr_oauth_secret'] ) ? esc_attr( $this->options['cup_tumblr_oauth_secret']) : ''
+		);
+	}
+	
+	/**
+	 * Callback for instagram_is_enabled
+	 *
+	 * @since 1.1.0
+	 * @return void
+	 * @author Américo Dias <americo.dias@gmail.com>
+	 */
+	public function instagram_is_enabled_callback() {
+		printf(
+			'<input type="checkbox" name="cup_options[cup_instagram_is_enabled]" id="cup_instagram_is_enabled" value="cup_instagram_is_enabled" %s> <label for="cup_instagram_is_enabled">Activate Instagram</label>',
+			( isset( $this->options['cup_instagram_is_enabled'] ) && $this->options['cup_instagram_is_enabled'] === true ) ? 'checked' : ''
+		);
+	}
+	
+	/**
+	 * Callback for instagram_username
+	 *
+	 * @since 1.1.0
+	 * @return void
+	 * @author Américo Dias <americo.dias@gmail.com>
+	 */
+	public function instagram_username_callback() {
+		printf(
+			'<input class="regular-text" type="text" name="cup_options[cup_instagram_username]" id="cup_instagram_username" value="%s">',
+			isset( $this->options['cup_instagram_username'] ) ? esc_attr( $this->options['cup_instagram_username']) : ''
+		);
+	}
+	
+	/**
+	 * Callback for instagram_password
+	 *
+	 * @since 1.1.0
+	 * @return void
+	 * @author Américo Dias <americo.dias@gmail.com>
+	 */
+	public function instagram_password_callback() {
+		printf(
+			'<input class="regular-text" type="text" name="cup_options[cup_instagram_password]" id="cup_instagram_password" value="%s">',
+			isset( $this->options['cup_instagram_password'] ) ? esc_attr( $this->options['cup_instagram_password']) : ''
 		);
 	}
 

@@ -16,7 +16,7 @@
  * Plugin Name:       Custom Uploader
  * Plugin URI:        http://americodias.com
  * Description:       Implementation of a custom image upload solution that can post to WordPress, Facebook, and Tumblr. It can take full advantage of the Eram Theme and the image galleries implemented on it. It is also compatible with the Exifography plugin.
- * Version:           1.0.0
+ * Version:           1.1.0
  * Author:            Américo Dias
  * Author URI:        http://americodias.com
  * License:           GPL-2.0+
