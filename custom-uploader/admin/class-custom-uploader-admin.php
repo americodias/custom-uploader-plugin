@@ -39,7 +39,7 @@ class Custom_Uploader_Admin {
 	 * @var      string    $version    The current version of this plugin.
 	 */
 	private $version;
-	
+
 	/**
 	 * The version of this plugin.
 	 *
@@ -48,7 +48,7 @@ class Custom_Uploader_Admin {
 	 * @var      string    $options   The current options.
 	 */
 	private $options;
-	
+
 	/**
 	 * Current active tab on the custom uploader options menu.
 	 *
@@ -57,7 +57,7 @@ class Custom_Uploader_Admin {
 	 * @var      string    $active_tab   The active tab.
 	 */
 	private $active_tab;
-	
+
 	/**
 	 * Initialize the class and set its properties.
 	 *
@@ -70,16 +70,16 @@ class Custom_Uploader_Admin {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 		$this->options = get_option( 'cup_options' );
-		
-        if( isset( $_GET[ 'tab' ] ) ) {  
-            $this->active_tab = $_GET[ 'tab' ];  
+
+        if( isset( $_GET[ 'tab' ] ) ) {
+            $this->active_tab = $_GET[ 'tab' ];
         } else {
             $this->active_tab = 'tab_one';
         }
-		
+
 		add_action( 'admin_menu', array( $this, 'add_plugin_page' ) );
 		add_action( 'admin_init', array( $this, 'page_init' ) );
-		
+
 	}
 
 	/**
@@ -127,7 +127,7 @@ class Custom_Uploader_Admin {
 		//wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/custom-uploader-admin.js', array( 'jquery' ), $this->version, false );
 
 	}
-	
+
 	/**
 	 * Add the options page to the admin area.
 	 *
@@ -159,20 +159,20 @@ class Custom_Uploader_Admin {
 			<!--<div class="description">This is description of the page.</div>-->
 			<p></p>
 
-            <h2 class="nav-tab-wrapper">  
-                <a href="?page=custom-uploader&tab=tab_one" class="nav-tab <?php echo $this->active_tab == 'tab_one' ? 'nav-tab-active' : ''; ?>">Google URL Shortener</a>  
-                <a href="?page=custom-uploader&tab=tab_two" class="nav-tab <?php echo $this->active_tab == 'tab_two' ? 'nav-tab-active' : ''; ?>">Facebook</a>  
+            <h2 class="nav-tab-wrapper">
+                <a href="?page=custom-uploader&tab=tab_one" class="nav-tab <?php echo $this->active_tab == 'tab_one' ? 'nav-tab-active' : ''; ?>">Bitly URL Shortener</a>
+                <a href="?page=custom-uploader&tab=tab_two" class="nav-tab <?php echo $this->active_tab == 'tab_two' ? 'nav-tab-active' : ''; ?>">Facebook</a>
 				<a href="?page=custom-uploader&tab=tab_three" class="nav-tab <?php echo $this->active_tab == 'tab_three' ? 'nav-tab-active' : ''; ?>">Tumblr</a>
-				<a href="?page=custom-uploader&tab=tab_four" class="nav-tab <?php echo $this->active_tab == 'tab_four' ? 'nav-tab-active' : ''; ?>">Instagram</a>    
-				<a href="?page=custom-uploader&tab=tab_five" class="nav-tab <?php echo $this->active_tab == 'tab_five' ? 'nav-tab-active' : ''; ?>">Galleries</a>  
+				<a href="?page=custom-uploader&tab=tab_four" class="nav-tab <?php echo $this->active_tab == 'tab_four' ? 'nav-tab-active' : ''; ?>">Instagram</a>
+				<a href="?page=custom-uploader&tab=tab_five" class="nav-tab <?php echo $this->active_tab == 'tab_five' ? 'nav-tab-active' : ''; ?>">Galleries</a>
             </h2>
-			
-            <form method="post" action="options.php"> 
+
+            <form method="post" action="options.php">
 				<input type="hidden" name="tab" value="<?php echo $this->active_tab; ?>">
 	            <?php
-				
-	                if( strcmp($this->active_tab, 'tab_one') == 0 ) {  
-					
+
+	                if( strcmp($this->active_tab, 'tab_one') == 0 ) {
+
 						settings_fields( 'custom-uploader' );
 						do_settings_sections( 'custom-uploader-1' );
 
@@ -197,7 +197,7 @@ class Custom_Uploader_Admin {
 						do_settings_sections( 'custom-uploader-5' );
 
 	                }
-				
+
 					submit_button();
 	            ?>
 			</form>
@@ -219,37 +219,48 @@ class Custom_Uploader_Admin {
 			'cup_options', // cup_options
 			array( $this, 'sanitize' ) // sanitize_callback
 		);
-		
+
 		/* Gooogle URL Shortner Section
 		*******************************/
 		add_settings_section(
-			'google_url_shortener', // id
+			'bitly_url_shortener', // id
 			'', // title
-			array( $this, 'google_url_shortener_section_info' ), // callback
+			array( $this, 'bitly_url_shortener_section_info' ), // callback
 			'custom-uploader-1' // page
 		);
-		
+
 		add_settings_field(
-			'google_url_shortener_is_enabled', // id
+			'bitly_url_shortener_is_enabled', // id
 			'Enable', // title
-			array( $this, 'google_url_shortener_is_enabled_callback' ), // callback
+			array( $this, 'bitly_url_shortener_is_enabled_callback' ), // callback
 			'custom-uploader-1', // page
-			'google_url_shortener' // section
+			'bitly_url_shortener' // section
 		);
-		
+
 		add_settings_field(
-			'google_url_shortener_api_key', // id
-			'Google URL Shortener API Key', // title
-			array( $this, 'google_url_shortener_api_key_callback' ), // callback
+			'bitly_url_shortener_generic_access_token', // id
+			'Bitly URL Shortener Generic Access Token', // title
+			array( $this, 'bitly_url_shortener_generic_access_token_callback' ), // callback
 			'custom-uploader-1', // page
-			'google_url_shortener', // section
-			array(  // The array of arguments to pass to the callback. In this case, just a description.  
-            'This is the description of the option 1',
-        	) 
+			'bitly_url_shortener', // section
+			array(  // The array of arguments to pass to the callback. In this case, just a description.
+            'Bitly Generic Access Token',
+        	)
+		);
+
+		add_settings_field(
+			'bitly_url_shortener_domain', // id
+			'Bitly URL Shortener Domain', // title
+			array( $this, 'bitly_url_shortener_domain_callback' ), // callback
+			'custom-uploader-1', // page
+			'bitly_url_shortener', // section
+			array(  // The array of arguments to pass to the callback. In this case, just a description.
+            'Bitly Domain (i.e. bit.ly)',
+        	)
 		);
 
 		/* Facebook Section
-		*******************/	
+		*******************/
 		add_settings_section(
 			'facebook', // id
 			'', // title
@@ -264,7 +275,7 @@ class Custom_Uploader_Admin {
 			'custom-uploader-2', // page
 			'facebook' // section
 		);
-			
+
 		add_settings_field(
 			'facebook_app_id', // id
 			'App ID', // title
@@ -305,7 +316,7 @@ class Custom_Uploader_Admin {
 			array( $this, 'tumblr_section_info' ), // callback
 			'custom-uploader-3' // page
 		);
-		
+
 		add_settings_field(
 			'ftumblr_is_enabled', // id
 			'Enable', // title
@@ -313,7 +324,7 @@ class Custom_Uploader_Admin {
 			'custom-uploader-3', // page
 			'tumblr' // section
 		);
-		
+
 		add_settings_field(
 			'tumblr_consumer_key', // id
 			'Tumblr Consumer Key', // title
@@ -329,7 +340,7 @@ class Custom_Uploader_Admin {
 			'custom-uploader-3', // page
 			'tumblr' // section
 		);
-		
+
 		add_settings_field(
 			'tumblr_oauth_token', // id
 			'Tumblr OAuth Token', // title
@@ -337,7 +348,7 @@ class Custom_Uploader_Admin {
 			'custom-uploader-3', // page
 			'tumblr' // section
 		);
-		
+
 		add_settings_field(
 			'tumblr_oauth_secret', // id
 			'Tumblr OAuth Secret', // title
@@ -345,7 +356,7 @@ class Custom_Uploader_Admin {
 			'custom-uploader-3', // page
 			'tumblr' // section
 		);
-		
+
 		add_settings_field(
 			'tumblr_blog_name', // id
 			'Tumblr Blog Name', // title
@@ -371,7 +382,7 @@ class Custom_Uploader_Admin {
 			array( $this, 'instagram_section_info' ), // callback
 			'custom-uploader-4' // page
 		);
-		
+
 		add_settings_field(
 			'instagram_is_enabled', // id
 			'Enable', // title
@@ -379,7 +390,7 @@ class Custom_Uploader_Admin {
 			'custom-uploader-4', // page
 			'instagram' // section
 		);
-			
+
 		add_settings_field(
 			'instagram_username', // id
 			'Username', // title
@@ -395,16 +406,16 @@ class Custom_Uploader_Admin {
 			'custom-uploader-4', // page
 			'instagram' // section
 		);
-			
+
 		/* Mobile Gallery Section
-		*************************/		
+		*************************/
 		add_settings_section(
 			'galleries', // id
 			'', // title
 			array( $this, 'galleries_section_info' ), // callback
 			'custom-uploader-5' // page
 		);
-		
+
 		add_settings_field(
 			'mobile_gallery_id', // id
 			'Mobile Gallery ID', // title
@@ -462,7 +473,7 @@ class Custom_Uploader_Admin {
 	 * Sanitize input fields
 	 *
 	 * @since 1.0.0
-	 * @param array $input 
+	 * @param array $input
 	 * @return array of sanitized inputs
 	 * @author Américo Dias <americo.dias@gmail.com>
 	 */
@@ -470,51 +481,53 @@ class Custom_Uploader_Admin {
 		$sanitary_values = $this->options;
 
 		if($_POST['tab'] === 'tab_one') {
-			if ( array_key_exists( 'cup_google_url_shortener_is_enabled', $input ) )
-				$sanitary_values['cup_google_url_shortener_is_enabled'] = true;
+			if ( array_key_exists( 'cup_bitly_url_shortener_is_enabled', $input ) )
+				$sanitary_values['cup_bitly_url_shortener_is_enabled'] = true;
 			else
-				$sanitary_values['cup_google_url_shortener_is_enabled'] = false;
-		
-			$sanitary_values['cup_google_url_shortener_api_key'] = sanitize_text_field( $input['cup_google_url_shortener_api_key'] );
+				$sanitary_values['cup_bitly_url_shortener_is_enabled'] = false;
+
+			$sanitary_values['cup_bitly_url_shortener_generic_access_token'] = sanitize_text_field( $input['cup_bitly_url_shortener_generic_access_token'] );
+
+			$sanitary_values['cup_bitly_url_shortener_domain'] = sanitize_text_field( $input['cup_bitly_url_shortener_domain'] );
 		}
-		
+
 		elseif($_POST['tab'] === 'tab_two') {
 			if ( array_key_exists( 'cup_facebook_is_enabled', $input ) )
 				$sanitary_values['cup_facebook_is_enabled'] = true;
 			else
 				$sanitary_values['cup_facebook_is_enabled'] = false;
-		
+
 			if ( isset( $input['cup_facebook_app_id'] ) )
 				$sanitary_values['cup_facebook_app_id'] = sanitize_text_field( $input['cup_facebook_app_id'] );
-		
+
 			if ( isset( $input['cup_facebook_app_secret'] ) )
 				$sanitary_values['cup_facebook_app_secret'] = sanitize_text_field( $input['cup_facebook_app_secret'] );
-		
+
 			if ( isset( $input['cup_facebook_api_key'] ) )
 				$sanitary_values['cup_facebook_api_key'] = esc_textarea( $input['cup_facebook_api_key'] );
-		
+
 			if ( isset( $input['cup_facebook_mobile_album_id'] ) )
 				$sanitary_values['cup_facebook_mobile_album_id'] = sanitize_text_field( $input['cup_facebook_mobile_album_id'] );
 		}
-		
+
 		elseif($_POST['tab'] === 'tab_three') {
 			if ( array_key_exists( 'cup_tumblr_is_enabled', $input ) )
 				$sanitary_values['cup_tumblr_is_enabled'] = true;
 			else
 				$sanitary_values['cup_tumblr_is_enabled'] = false;
-		
+
 			if ( isset( $input['cup_tumblr_consumer_key'] ) )
 				$sanitary_values['cup_tumblr_consumer_key'] = sanitize_text_field( $input['cup_tumblr_consumer_key'] );
-		
+
 			if ( isset( $input['cup_tumblr_consumer_secret'] ) )
 				$sanitary_values['cup_tumblr_consumer_secret'] = sanitize_text_field( $input['cup_tumblr_consumer_secret'] );
-		
+
 			if ( isset( $input['cup_tumblr_oauth_token'] ) )
 				$sanitary_values['cup_tumblr_oauth_token'] = sanitize_text_field( $input['cup_tumblr_oauth_token'] );
-		
+
 			if ( isset( $input['cup_tumblr_oauth_secret'] ) )
 				$sanitary_values['cup_tumblr_oauth_secret'] = sanitize_text_field( $input['cup_tumblr_oauth_secret'] );
-		
+
 			if ( isset( $input['cup_tumblr_blog_name'] ) )
 				$sanitary_values['cup_tumblr_blog_name'] = sanitize_text_field( $input['cup_tumblr_blog_name'] );
 		}
@@ -523,34 +536,34 @@ class Custom_Uploader_Admin {
 				$sanitary_values['cup_instagram_is_enabled'] = true;
 			else
 				$sanitary_values['cup_instagram_is_enabled'] = false;
-		
+
 			if ( isset( $input['cup_instagram_username'] ) )
 				$sanitary_values['cup_instagram_username'] = sanitize_text_field( $input['cup_instagram_username'] );
-			
+
 			if ( isset( $input['cup_instagram_password'] ) )
 				$sanitary_values['cup_instagram_password'] = sanitize_text_field( $input['cup_instagram_password'] );
 		}
 		elseif($_POST['tab'] === 'tab_five') {
 			if ( isset( $input['cup_mobile_gallery_id'] ) )
 				$sanitary_values['cup_mobile_gallery_id'] = sanitize_text_field( $input['cup_mobile_gallery_id'] );
-		
+
 			if ( isset( $input['cup_dslr_gallery_id'] ) )
 				$sanitary_values['cup_dslr_gallery_id'] = sanitize_text_field( $input['cup_dslr_gallery_id'] );
 		}
-		
+
 		$sanitary_values['image_sizes'] = $this->get_image_sizes();
-			
+
 		return $sanitary_values;
 	}
 
 	/**
-	 * Google URL shortener tab info
+	 * Bitly URL shortener tab info
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 * @author Américo Dias <americo.dias@gmail.com>
 	 */
-	public function google_url_shortener_section_info() {
+	public function bitly_url_shortener_section_info() {
 	}
 
 	/**
@@ -562,7 +575,7 @@ class Custom_Uploader_Admin {
 	 */
 	public function facebook_section_info() {
 	}
-	
+
 	/**
 	 * Tumblr tab info
 	 *
@@ -576,7 +589,7 @@ class Custom_Uploader_Admin {
 		echo '<p>Insert the Comsumer Key/Secret and then use this <a href="' . $tumblr_autenticate_url . '">activation link</a> to get OAuth Token/Secret.</p>';
 		echo '<p>Please define your call back url as follows: <strong>' . $tumblr_callback_url . '</strong></p>';
 	}
-	
+
 	/**
 	 * Instagram info
 	 *
@@ -586,7 +599,7 @@ class Custom_Uploader_Admin {
 	 */
 	public function instagram_section_info() {
 	}
-	
+
 	/**
 	 * Galleries tab info
 	 *
@@ -596,7 +609,7 @@ class Custom_Uploader_Admin {
 	 */
 	public function galleries_section_info() {
 	}
-	
+
 	/**
 	 * Callback for facebook_is_enabled
 	 *
@@ -610,7 +623,7 @@ class Custom_Uploader_Admin {
 			( isset( $this->options['cup_facebook_is_enabled'] ) && $this->options['cup_facebook_is_enabled'] === true ) ? 'checked' : ''
 		);
 	}
-	
+
 	/**
 	 * Callback for facebook_app_id
 	 *
@@ -694,35 +707,49 @@ class Custom_Uploader_Admin {
 			isset( $this->options['cup_dslr_gallery_id'] ) ? esc_attr( $this->options['cup_dslr_gallery_id']) : ''
 		);
 	}
-	
+
 	/**
-	 * Callback for google_url_shortener_is_enabled
+	 * Callback for bitly_url_shortener_is_enabled
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 * @author Américo Dias <americo.dias@gmail.com>
 	 */
-	public function google_url_shortener_is_enabled_callback() {
+	public function bitly_url_shortener_is_enabled_callback() {
 		printf(
-			'<input type="checkbox" name="cup_options[cup_google_url_shortener_is_enabled]" id="cup_google_url_shortener_is_enabled" value="cup_google_url_shortener_is_enabled" %s> <label for="cup_google_url_shortener_is_enabled">Activate Google URL Shortener</label>',
-			( isset( $this->options['cup_google_url_shortener_is_enabled'] ) && $this->options['cup_google_url_shortener_is_enabled'] === true ) ? 'checked' : ''
+			'<input type="checkbox" name="cup_options[cup_bitly_url_shortener_is_enabled]" id="cup_bitly_url_shortener_is_enabled" value="cup_bitly_url_shortener_is_enabled" %s> <label for="cup_bitly_url_shortener_is_enabled">Activate Bitly URL Shortener</label>',
+			( isset( $this->options['cup_bitly_url_shortener_is_enabled'] ) && $this->options['cup_bitly_url_shortener_is_enabled'] === true ) ? 'checked' : ''
 		);
 	}
-	
+
 	/**
-	 * Callback for google_url_shortener_api_key
+	 * Callback for bitly_url_shortener_generic_access_token
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 * @author Américo Dias <americo.dias@gmail.com>
 	 */
-	public function google_url_shortener_api_key_callback() {
+	public function bitly_url_shortener_generic_access_token_callback() {
 		printf(
-			'<input class="regular-text" type="text" name="cup_options[cup_google_url_shortener_api_key]" id="cup_google_url_shortener_api_key" value="%s">',
-			isset( $this->options['cup_google_url_shortener_api_key'] ) ? esc_attr( $this->options['cup_google_url_shortener_api_key']) : ''
+			'<input class="regular-text" type="text" name="cup_options[cup_bitly_url_shortener_generic_access_token]" id="cup_bitly_url_shortener_generic_access_token" value="%s">',
+			isset( $this->options['cup_bitly_url_shortener_generic_access_token'] ) ? esc_attr( $this->options['cup_bitly_url_shortener_generic_access_token']) : ''
 		);
 	}
-	
+
+	/**
+	 * Callback for bitly_url_shortener_domain
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 * @author Américo Dias <americo.dias@gmail.com>
+	 */
+	public function bitly_url_shortener_domain_callback() {
+		printf(
+			'<input class="regular-text" type="text" name="cup_options[cup_bitly_url_shortener_domain]" id="cup_bitly_url_shortener_domain" value="%s">',
+			isset( $this->options['cup_bitly_url_shortener_domain'] ) ? esc_attr( $this->options['cup_bitly_url_shortener_domain']) : ''
+		);
+	}
+
 	/**
 	 * Callback for tumblr_is_enabled
 	 *
@@ -736,7 +763,7 @@ class Custom_Uploader_Admin {
 			( isset( $this->options['cup_tumblr_is_enabled'] ) && $this->options['cup_tumblr_is_enabled'] === true ) ? 'checked' : ''
 		);
 	}
-	
+
 	/**
 	 * Callback for tumblr_blog_name
 	 *
@@ -750,7 +777,7 @@ class Custom_Uploader_Admin {
 			isset( $this->options['cup_tumblr_blog_name'] ) ? esc_attr( $this->options['cup_tumblr_blog_name']) : ''
 		);
 	}
-	
+
 	/**
 	 * Callback for tumblr_consumer_key
 	 *
@@ -778,7 +805,7 @@ class Custom_Uploader_Admin {
 			isset( $this->options['cup_tumblr_consumer_secret'] ) ? esc_attr( $this->options['cup_tumblr_consumer_secret']) : ''
 		);
 	}
-	
+
 	/**
 	 * Callback for tumblr_oauth_token
 	 *
@@ -792,7 +819,7 @@ class Custom_Uploader_Admin {
 			isset( $this->options['cup_tumblr_oauth_token'] ) ? esc_attr( $this->options['cup_tumblr_oauth_token']) : ''
 		);
 	}
-	
+
 	/**
 	 * Callback for tumblr_oauth_secret
 	 *
@@ -806,7 +833,7 @@ class Custom_Uploader_Admin {
 			isset( $this->options['cup_tumblr_oauth_secret'] ) ? esc_attr( $this->options['cup_tumblr_oauth_secret']) : ''
 		);
 	}
-	
+
 	/**
 	 * Callback for instagram_is_enabled
 	 *
@@ -820,7 +847,7 @@ class Custom_Uploader_Admin {
 			( isset( $this->options['cup_instagram_is_enabled'] ) && $this->options['cup_instagram_is_enabled'] === true ) ? 'checked' : ''
 		);
 	}
-	
+
 	/**
 	 * Callback for instagram_username
 	 *
@@ -834,7 +861,7 @@ class Custom_Uploader_Admin {
 			isset( $this->options['cup_instagram_username'] ) ? esc_attr( $this->options['cup_instagram_username']) : ''
 		);
 	}
-	
+
 	/**
 	 * Callback for instagram_password
 	 *
